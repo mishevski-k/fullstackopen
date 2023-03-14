@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import Button from './components/Button';
+import DailyAnectode from './components/DailyAnectode';
+import MostVotedAnecdote from './components/MostVotedAnectode';
 
 function App() {
   const predifinedAnecdotes = [
@@ -48,8 +51,6 @@ function App() {
 
   const nextAnecdote = () => {
     setSelected(randomNumberMinMax(0, anecdotes.length - 1));
-    console.log(selected);
-    console.log(anecdotes);
   }
 
   const voteAnecdote = () => {
@@ -64,16 +65,10 @@ function App() {
 
   return (
     <div>
-      <h1>Anecdote of the day</h1>
-      <p>{ anecdotes[selected].content }</p>
-      <p>has { anecdotes[selected].votes } votes</p>
-      <div>
-        <button onClick={voteAnecdote}>vote</button>
-        <button onClick={nextAnecdote}>next anecdote</button>
-      </div>
-      <h1>Anecdote with most votes</h1>
-      <p>{ anecdotes[mostVotedAnecdote].content }</p>
-      <p>has { anecdotes[mostVotedAnecdote].votes } votes</p>
+      <DailyAnectode anecdote={anecdotes[selected]} />
+      <Button handleClick={voteAnecdote} text="vote" />
+      <Button handleClick={nextAnecdote} text="next anecdote" />
+      <MostVotedAnecdote anectode={anecdotes[mostVotedAnecdote]} totalVotes={totalVotes} />
     </div>
   )
 }
