@@ -1,3 +1,5 @@
+import StatisticLine from "./StatisticLine";
+
 const Statistics = ({good, neutral, bad, ratingCount, avarage, positive}) => {
 
     if(ratingCount === 0){
@@ -13,12 +15,12 @@ const Statistics = ({good, neutral, bad, ratingCount, avarage, positive}) => {
         <section>
             <h1>Statistics</h1>
             <div>
-                <p>Good { good }</p>
-                <p>Neutral { neutral }</p>
-                <p>Bad { bad }</p>
-                <p>all { ratingCount }</p>
-                <p>avarage { avarage }</p>
-                <p>positive { positive } %</p>
+                <StatisticLine text="Good" value={good} />
+                <StatisticLine text="Neutral" value={neutral} />
+                <StatisticLine text="Bad" value={bad} />
+                <StatisticLine text="All" value={ratingCount} />
+                <StatisticLine text="Avarage" value={avarage} />
+                <StatisticLine text="Positive" value={positive} />
             </div>
         </section>
     )
