@@ -34,6 +34,7 @@ const App = () => {
     setAvarage((good - newBad) / newRatingCount);
     setPositive((good / newRatingCount) * 100);
   } 
+
   return(
     <div>
       <h1>Give feedback</h1>
