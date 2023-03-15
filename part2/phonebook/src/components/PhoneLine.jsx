@@ -1,6 +1,6 @@
-const PhoneLine = ({name}) => {
+const PhoneLine = ({name, number}) => {
     return (
-        <p>{ name }</p>
+        <p>{ name } { number }</p>
     );
 }
 
