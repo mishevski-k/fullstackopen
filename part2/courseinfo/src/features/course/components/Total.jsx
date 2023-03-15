@@ -4,7 +4,7 @@ const Total = ({parts}) => {
         total += item.exercises;
     })
     return(
-        <p>Number of exercises { total }</p>
+        <h4>Number of exercises { total }</h4>
     );
 }
 
