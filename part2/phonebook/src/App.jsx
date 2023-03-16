@@ -37,11 +37,14 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
-    personService
+    const person = persons.find(person => person.id === id);
+    if(window.confirm(`Delete ${person.name} ?`)){
+      personService
       .remove(id)
       .then( response => {
         setPersons(persons.filter(person => person.id !== id));
       });
+    }
   }
 
   const addPerson = (event) => {
