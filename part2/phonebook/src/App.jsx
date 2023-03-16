@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PhoneList from "./components/PhoneList";
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
-import axios from 'axios';
+import personService from './services/persons';
 
 const App = () => {
   
@@ -12,14 +12,12 @@ const App = () => {
   const [ filterPerson, setFilterPerson ] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-      .catch((error) => {
-        console.error(error);
-      })
+
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons);
+      });
   }, []);
 
   const personsToShow = filterPerson === ''
@@ -52,10 +50,10 @@ const App = () => {
       number: newNumber,
     };
 
-    axios
-      .post("http://localhost:3001/persons", newPerson)
-      .then(response => {
-        setPersons(persons.concat(response.data));
+    personService
+      .create(newPerson)
+      .then( returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
         setNewName('')
         setNewNumber('');
       })
