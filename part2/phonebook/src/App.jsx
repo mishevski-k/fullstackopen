@@ -3,6 +3,8 @@ import PhoneList from "./components/PhoneList";
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import personService from './services/persons';
+import Notification from './components/Notification';
+import './assets/css/main.css';
 
 const App = () => {
   
@@ -10,6 +12,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ filterPerson, setFilterPerson ] = useState('');
+  const [ notificationMessage, setNotificationMessage] = useState({type: null, message: null});
 
   useEffect(() => {
 
@@ -43,6 +46,10 @@ const App = () => {
       .remove(id)
       .then( response => {
         setPersons(persons.filter(person => person.id !== id));
+        setNotificationMessage({type: 'success', message: `Deleted ${person.name}`})
+        setTimeout(() => {
+          setNotificationMessage({type: null, message: null});
+        }, 2000);
       });
     }
   }
@@ -52,9 +59,17 @@ const App = () => {
       .update(id, person)
       .then( result => {
         setPersons(persons.map(person => person.id !== result.id ? person : result));
+        setNotificationMessage({type: 'success', message: `Updated ${person.name}`})
+        setTimeout(() => {
+          setNotificationMessage({type: null, message: null});
+        }, 2000);
       })
       .catch(error => {
         setPersons(person.filter(person => person.id !== id));
+        setNotificationMessage({type: 'error', message: `Person ${person.name} not found!`})
+        setTimeout(() => {
+          setNotificationMessage({type: null, message: null});
+        }, 2000);
       })
   }
 
@@ -83,12 +98,17 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName('')
         setNewNumber('');
+        setNotificationMessage({type: 'success', message: `Added ${returnedPerson.name}`});
+        setTimeout(() => {
+          setNotificationMessage({type: null, message: null});
+        }, 2000)
       })
   }
 
   return(
     <div>
       <h2>Phonebook</h2>
+      <Notification type={notificationMessage.type} message={notificationMessage.message} />
       <Filter value={filterPerson} handleChange={handleFilterPerson} />
       <h3>Add a new</h3>
       <PersonForm handleSubmit={addPerson} nameValue={newName} numberValue={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} />
