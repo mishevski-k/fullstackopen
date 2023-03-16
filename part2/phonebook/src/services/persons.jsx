@@ -14,4 +14,8 @@ const remove = (id) => {
     return axios.delete(`${baseUrl}/${id}`).then( result => result).catch( error => alert(`Could not delete person`));
 }
 
-export default { getAll, create, remove }
+const update = (id, person) => {
+    return axios.put(`${baseUrl}/${id}`, person).then( result => result.data ).catch(error => alert(`Could not update person`));
+}
+
+export default { getAll, create, remove, update }
