@@ -1,6 +1,6 @@
-const PhoneLine = ({name, number}) => {
+const PhoneLine = ({name, number, id, handleDelete}) => {
     return (
-        <p>{ name } { number }</p>
+        <p>{ name } { number } <button onClick={()=> handleDelete(id)}>delete</button></p>
     );
 }
 

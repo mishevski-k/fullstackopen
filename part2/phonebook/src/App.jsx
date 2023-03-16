@@ -36,6 +36,14 @@ const App = () => {
     setFilterPerson(event.target.value);
   }
 
+  const deletePerson = (id) => {
+    personService
+      .remove(id)
+      .then( response => {
+        setPersons(persons.filter(person => person.id !== id));
+      });
+  }
+
   const addPerson = (event) => {
     event.preventDefault();
 
@@ -66,7 +74,7 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm handleSubmit={addPerson} nameValue={newName} numberValue={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} />
       <h3>Numbers</h3>
-      <PhoneList list={personsToShow} />
+      <PhoneList list={personsToShow} handleDelete={deletePerson} />
     </div>
   )
 }

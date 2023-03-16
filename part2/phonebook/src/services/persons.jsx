@@ -10,4 +10,8 @@ const create = (newPerson) => {
     return axios.post(baseUrl, newPerson).then( result => result.data).catch( error => alert(`Could not create new person`));
 }
 
-export default { getAll, create }
+const remove = (id) => {
+    return axios.delete(`${baseUrl}/${id}`).then( result => result).catch( error => alert(`Could not delete person`));
+}
+
+export default { getAll, create, remove }
