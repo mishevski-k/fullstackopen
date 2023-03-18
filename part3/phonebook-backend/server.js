@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const server = express();
 
 morgan.token('json-body', (req,res) => {
@@ -7,7 +8,9 @@ morgan.token('json-body', (req,res) => {
 });
 
 server.use(express.json());
+server.use(express.static('dist'));
 server.use(morgan(':method :url :status :res[content-length] - :response-time ms :json-body'));
+server.use(cors());
 
 let persons = [
     {
@@ -41,7 +44,7 @@ const generateId= () => {
     return Math.floor(Math.random() * 321);
 }
 
-server.get('/', (request, response) => {
+server.get('/api/v1', (request, response) => {
     const routes = {
         root: '/',
         info: '/info',
@@ -132,7 +135,7 @@ server.delete(`${personsResource}/:id`, (request, response) => {
     response.status(204).end();
 })
 
-const PORT = 3001 // should be changed to environment variable
+const PORT = process.env.PORT || 3001 // should be changed to environment variable
 
 server.listen(PORT, () => {
     console.log(`server is running at http://localhost:${PORT}`)
