@@ -1,16 +1,14 @@
-const Footer = () => {
-    const footerStyle = {
-      color: 'green',
-      fontStyle: 'italic',
-      fontSize: 16
-    }
-  
-    return (
-      <div style={footerStyle}>
-        <br />
-        <em>Note app, Department of Computer Science, University of Helsinki 2023</em>
-      </div>
-    )
-  }
-  
-  export default Footer
+const Note = ({ note, toggleImportance }) => {
+  const label = note.important 
+    ? 'make not important' 
+    : 'make important';
+
+  return (
+    <li className='note'>
+      {note.content} 
+      <button onClick={toggleImportance}>{label}</button>
+    </li>
+  )
+}
+
+export default Note
