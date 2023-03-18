@@ -1,16 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
+import countriesService from './services/countriesService';
 
 import Countries from './components/Countries';
 
 const App = () => {
 
   const [ matchingCountries, setMatchingCountries ] = useState([]);
-
-  const getContries = name => {
-
-    return axios.get(`https://restcountries.com/v3.1/name/${name}`).then( response => response.data );
-  }
 
   const filterCountries = (event) => {
     let searchText = event.target.value;
@@ -20,7 +15,9 @@ const App = () => {
     }
 
     console.log(searchText);
-    getContries(searchText)
+    
+    countriesService
+      .getByName(searchText)
       .then( countries => {
         if(countries.length <= 10){
           setMatchingCountries(countries);
@@ -30,12 +27,20 @@ const App = () => {
       })
   }
 
+  const showCountry = (name) => {
+    const wantedCountry = matchingCountries.filter( country => country.name.common === name);
+  
+    if(wantedCountry.length > 0){
+      setMatchingCountries(wantedCountry);
+    }
+  }
+
   return (
     <div>
       <div>
         find contries <input onKeyUp={filterCountries}></input>
       </div>
-      <Countries countries={matchingCountries} />
+      <Countries countries={matchingCountries} handleCountryClick={showCountry}/>
     </div>
   )
 
