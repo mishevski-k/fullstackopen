@@ -32,10 +32,16 @@ const persons = [
 server.get('/', (request, response) => {
     const routes = {
         root: '/',
+        info: '/info',
         persons: '/api/v1/persons'
     }
 
     response.json(routes);
+});
+
+server.get('/info', (request, response) => {
+
+    response.send(`<p>Phonebook has info for ${persons.length} people</p><h4>${new Date()}</h4>`);
 });
 
 const personsResource = '/api/v1/persons';
