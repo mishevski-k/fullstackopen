@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "render-build:ui": "rm -rf dist && cd ../phonebook-frontend && npm run build && cp -r dist ../phonebook-backend && cd ../phonebook-backend",
-    "render-deploy:full": "npm run render-build:ui && git add . && git commit -m uibuild && git push node server.js"
+    "render-deploy:full": "npm run render-build:ui && git add . && git commit -m phonebook-ui-build && git push"
   },
   "keywords": [
     "backend",
