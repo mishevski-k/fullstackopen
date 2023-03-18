@@ -134,7 +134,7 @@ server.delete(`${personsResource}/:id`, (request, response) => {
     response.status(204).end();
 })
 
-const PORT = 3001 // should be changed to environment variable
+const PORT = process.env.PORT || 3001 // should be changed to environment variable
 
 server.listen(PORT, () => {
     console.log(`server is running at http://localhost:${PORT}`)
