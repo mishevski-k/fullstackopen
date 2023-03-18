@@ -42,10 +42,6 @@ let persons = [
     },
 ];
 
-const generateId= () => {
-    return Math.floor(Math.random() * 321);
-}
-
 server.get('/api/v1', (request, response) => {
     const routes = {
         root: '/',
@@ -64,31 +60,27 @@ server.get('/info', (request, response) => {
 
 const personsResource = '/api/v1/persons';
 
-server.get(`${personsResource}`, (request, response) => {
+server.get(`${personsResource}`, (request, response, next) => {
 
     Person
         .find({})
         .then( result => {
             response.json(result);
         })
-        .catch((error) => {
-            response.status(404).json({code: 1000, message: "We could not find any person"})
-        })
+        .catch(error => next(error))
 });
 
-server.get(`${personsResource}/:id`, (request, response) => {
+server.get(`${personsResource}/:id`, (request, response, next) => {
 
     Person
         .findById(request.params.id)
         .then( result => {
             response.json(result);
         })
-        .catch((error) => {
-            response.status(404).json({error:`Could not find person with id ${id}`});
-        })
+        .catch(error => next(error))
 });
 
-server.post(`${personsResource}`, (request, response) => {
+server.post(`${personsResource}`, (request, response,next) => {
     const body = request.body;
 
     if(!body.name){
@@ -116,19 +108,36 @@ server.post(`${personsResource}`, (request, response) => {
         .then( result => {
             response.json(result);
         })
-        .catch( (error) => {
-            respose.status(500).json({error: "An error occured"})
-        })
+        .catch( error => next(error))
 })
 
-server.delete(`${personsResource}/:id`, (request, response) => {
+server.delete(`${personsResource}/:id`, (request, response,next) => {
 
     Person
         .findByIdAndRemove(request.params.id)
         .then( result => {
             response.status(204).end()
         })
+        .catch(error => next(error))
 })
+
+const unknownEnpoint = (request, response) => {
+    response.status(404).send({error: "unkown endpoint"});
+}
+
+server.use(unknownEnpoint);
+
+const errorHandler = (error, request, reponse, next) => {
+    console.log(error.message);
+
+    if(error.name === 'CastError'){
+        return reponse.status(400).send({error: "malformed parametar"})
+    }
+
+    next(error);
+}
+
+server.use(errorHandler);
 
 const PORT = process.env.PORT || 3001 // should be changed to environment variable
 
