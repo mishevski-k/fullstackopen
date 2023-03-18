@@ -8,6 +8,7 @@ morgan.token('json-body', (req,res) => {
 });
 
 server.use(express.json());
+server.use(express.static('dist'));
 server.use(morgan(':method :url :status :res[content-length] - :response-time ms :json-body'));
 server.use(cors());
 
@@ -43,7 +44,7 @@ const generateId= () => {
     return Math.floor(Math.random() * 321);
 }
 
-server.get('/', (request, response) => {
+server.get('/api/v1', (request, response) => {
     const routes = {
         root: '/',
         info: '/info',
