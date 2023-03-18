@@ -81,17 +81,16 @@ const App = () => {
       number: newNumber,
     };
 
-    // Commected out for moment will be probably implemented back in future exercise
-    // const existingPerson = persons.find(person => person.name === newName);
+    const existingPerson = persons.find(person => person.name === newName);
 
-    // if(existingPerson){
-    //   if(window.confirm(`${existingPerson.name} is alredy added to phonebook, replace the old number with a new one?`)){
-    //     return updateNumber(existingPerson.id, newPerson);
-    //   }else{
-    //     return;
-    //   }
+    if(existingPerson){
+      if(window.confirm(`${existingPerson.name} is alredy added to phonebook, replace the old number with a new one?`)){
+        return updateNumber(existingPerson.id, newPerson);
+      }else{
+        return;
+      }
 
-    // }
+    }
 
     personService
       .create(newPerson)
