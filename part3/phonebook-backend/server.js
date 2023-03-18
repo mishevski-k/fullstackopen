@@ -121,7 +121,7 @@ server.delete(`${personsResource}/:id`, (request, response) => {
         return response.json({error: 'Id given is not a number'});
     }
 
-    persons.filter(p => p.id !== id);
+    persons = persons.filter(p => p.id !== id);
 
     response.status(204).end();
 })
