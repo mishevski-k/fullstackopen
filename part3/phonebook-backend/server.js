@@ -122,15 +122,12 @@ server.post(`${personsResource}`, (request, response) => {
 })
 
 server.delete(`${personsResource}/:id`, (request, response) => {
-    const id = Number(request.params.id);
 
-    if(id != id){
-        return response.json({error: 'Id given is not a number'});
-    }
-
-    persons = persons.filter(p => p.id !== id);
-
-    response.status(204).end();
+    Person
+        .findByIdAndRemove(request.params.id)
+        .then( result => {
+            response.status(204).end()
+        })
 })
 
 const PORT = process.env.PORT || 3001 // should be changed to environment variable
