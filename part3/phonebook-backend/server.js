@@ -5,7 +5,7 @@ const cors = require('cors');
 const Person = require('./models/person');
 const server = express();
 
-morgan.token('json-body', (req,res) => {
+morgan.token('json-body', (req, res) => {
     return JSON.stringify(req.body);
 });
 
@@ -20,7 +20,7 @@ server.get('/api/v1', (request, response) => {
         info: '/info',
         persons: '/api/v1/persons',
         personById: '/api/v1/persons/:id'
-    }
+    };
 
     response.json(routes);
 });
@@ -32,7 +32,7 @@ server.get('/info', (request, response, next) => {
         .then( result => {
             response.send(`<p>Phonebook has info for ${result.length} people</p><h4>${new Date()}</h4>`);
         })
-        .catch(error => next(error))
+        .catch(error => next(error));
 
 });
 
@@ -45,7 +45,7 @@ server.get(`${personsResource}`, (request, response, next) => {
         .then( result => {
             response.json(result);
         })
-        .catch(error => next(error))
+        .catch(error => next(error));
 });
 
 server.get(`${personsResource}/:id`, (request, response, next) => {
@@ -55,7 +55,7 @@ server.get(`${personsResource}/:id`, (request, response, next) => {
         .then( result => {
             response.json(result);
         })
-        .catch(error => next(error))
+        .catch(error => next(error));
 });
 
 server.post(`${personsResource}`, (request, response,next) => {
@@ -71,8 +71,8 @@ server.post(`${personsResource}`, (request, response,next) => {
         .then( result => {
             response.json(result);
         })
-        .catch( error => next(error))
-})
+        .catch( error => next(error));
+});
 
 server.put(`${personsResource}/:id`, (request, response, next) => {
     const body = request.body;
@@ -88,21 +88,21 @@ server.put(`${personsResource}/:id`, (request, response, next) => {
             response.json(result);
         })
         .catch(error => next(error));
-})
+});
 
 server.delete(`${personsResource}/:id`, (request, response,next) => {
 
     Person
         .findByIdAndRemove(request.params.id)
         .then( result => {
-            response.status(204).end()
+            response.status(204).end();
         })
-        .catch(error => next(error))
-})
+        .catch(error => next(error));
+});
 
 const unknownEnpoint = (request, response) => {
-    response.status(404).send({error: "unkown endpoint"});
-}
+    response.status(404).send({error: 'unkown endpoint'});
+};
 
 server.use(unknownEnpoint);
 
@@ -110,18 +110,18 @@ const errorHandler = (error, request, response, next) => {
     console.log(error.message);
 
     if(error.name === 'CastError'){
-        return response.status(400).send({error: "malformed parametar"})
+        return response.status(400).send({error: 'malformed parametar'});
     }else if(error.name === 'ValidationError'){
         return response.status(400).json({error: error.message});
     }
 
     next(error);
-}
+};
 
 server.use(errorHandler);
 
-const PORT = process.env.PORT || 3001 // should be changed to environment variable
+const PORT = process.env.PORT || 3001; // should be changed to environment variable
 
 server.listen(PORT, () => {
-    console.log(`server is running at http://localhost:${PORT}`)
-})
+    console.log(`server is running at http://localhost:${PORT}`);
+});

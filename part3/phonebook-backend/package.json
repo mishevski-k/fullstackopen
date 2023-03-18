@@ -19,6 +19,7 @@
   "author": "Kiril Mishevski",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^8.36.0",
     "nodemon": "^2.0.21"
   },
   "dependencies": {
