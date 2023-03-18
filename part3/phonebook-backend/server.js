@@ -33,7 +33,8 @@ server.get('/', (request, response) => {
     const routes = {
         root: '/',
         info: '/info',
-        persons: '/api/v1/persons'
+        persons: '/api/v1/persons',
+        personById: '/api/v1/persons/:id'
     }
 
     response.json(routes);
@@ -53,6 +54,22 @@ server.get(`${personsResource}`, (request, response) => {
 
     response.json(persons);
 });
+
+server.get(`${personsResource}/:id`, (request, response) => {
+    const id = Number(request.params.id);
+
+    if(id != id){
+        return response.json({code: 1000, message: 'Id given is not a number'});
+    }
+
+    const person = persons.find( p => p.id === id);
+
+    if(person){
+        response.json(person);
+    }else{
+        response.status(404).json({code: 1001, message: `Could not find person with id ${id}`});
+    }
+})
 
 const PORT = 3001 // should be changed to environment variable
 
