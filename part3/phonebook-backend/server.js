@@ -69,6 +69,18 @@ server.get(`${personsResource}/:id`, (request, response) => {
     }else{
         response.status(404).json({code: 1001, message: `Could not find person with id ${id}`});
     }
+});
+
+server.delete(`${personsResource}/:id`, (request, response) => {
+    const id = Number(request.params.id);
+
+    if(id != id){
+        return response.json({code: 1000, message: 'Id given is not a number'});
+    }
+
+    persons.filter(p => p.id !== id);
+
+    response.status(204).end();
 })
 
 const PORT = 3001 // should be changed to environment variable
