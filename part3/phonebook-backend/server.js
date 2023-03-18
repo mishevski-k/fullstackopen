@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person');
 const server = express();
 
 morgan.token('json-body', (req,res) => {
@@ -63,27 +65,27 @@ server.get('/info', (request, response) => {
 const personsResource = '/api/v1/persons';
 
 server.get(`${personsResource}`, (request, response) => {
-    if(persons.length === 0){
-        return response.status(404).json({code: 1000, message: "We could not find any person"});
-    }
 
-    response.json(persons);
+    Person
+        .find({})
+        .then( result => {
+            response.json(result);
+        })
+        .catch((error) => {
+            response.status(404).json({code: 1000, message: "We could not find any person"})
+        })
 });
 
 server.get(`${personsResource}/:id`, (request, response) => {
-    const id = Number(request.params.id);
 
-    if(id != id){
-        return response.json({error: 'Id given is not a number'});
-    }
-
-    const person = persons.find( p => p.id === id);
-
-    if(person){
-        response.json(person);
-    }else{
-        response.status(404).json({error:`Could not find person with id ${id}`});
-    }
+    Person
+        .findById(request.params.id)
+        .then( result => {
+            response.json(result);
+        })
+        .catch((error) => {
+            response.status(404).json({error:`Could not find person with id ${id}`});
+        })
 });
 
 server.post(`${personsResource}`, (request, response) => {
