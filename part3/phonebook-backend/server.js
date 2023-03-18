@@ -111,6 +111,34 @@ server.post(`${personsResource}`, (request, response,next) => {
         .catch( error => next(error))
 })
 
+server.put(`${personsResource}/:id`, (request, response, next) => {
+    const body = request.body;
+
+    if(!body.name){
+        return response.status(400).json({
+            error: `Missing persons name`
+        });
+    }
+
+    if(!body.number){
+        return response.status(400).json({
+            error: `Missing persons number`
+        });
+    }   
+    
+    const person = {
+        name: body.name,
+        number: body.number
+    };
+
+    Person
+        .findByIdAndUpdate(request.params.id, person, { new: true})
+        .then(result => {
+            response.json(result);
+        })
+        .catch(error => next(error));
+})
+
 server.delete(`${personsResource}/:id`, (request, response,next) => {
 
     Person
