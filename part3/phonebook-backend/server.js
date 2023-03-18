@@ -1,7 +1,9 @@
 const express = require('express');
 const server = express();
 
-const persons = [
+server.use(express.json());
+
+let persons = [
     {
         id: 1,
         name: "Arto Hellas",
@@ -28,6 +30,10 @@ const persons = [
         number: "389-078-000-000",
     },
 ];
+
+const generateId= () => {
+    return Math.floor(Math.random() * 321);
+}
 
 server.get('/', (request, response) => {
     const routes = {
@@ -70,6 +76,34 @@ server.get(`${personsResource}/:id`, (request, response) => {
         response.status(404).json({code: 1001, message: `Could not find person with id ${id}`});
     }
 });
+
+server.post(`${personsResource}`, (request, response) => {
+    const body = request.body;
+
+    if(!body.name){
+        return response.status(400).json({
+            code: 1101,
+            message: `Missing persons name`
+        });
+    }
+
+    if(!body.number){
+        return response.status(400).json({
+            code: 1101,
+            message: `Missing persons number`
+        });
+    }
+
+    const newPerson = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    };
+
+    persons = persons.concat(newPerson);
+
+    response.json(newPerson);
+})
 
 server.delete(`${personsResource}/:id`, (request, response) => {
     const id = Number(request.params.id);

@@ -10,6 +10,16 @@ GET http://localhost:3001/api/v1/persons
 
 ###
 
+POST http://localhost:3001/api/v1/persons
+Content-Type: application/json
+
+{
+    "name": "Kiril Mishevski",
+    "number": 78123456
+}
+
+###
+
 GET http://localhost:3001/api/v1/persons/1
 
 ###
