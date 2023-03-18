@@ -1,5 +1,5 @@
 .env
 node_modules
-**/node_modules
-*/note_modules
+**/node_modules/
+*/note_modules/
 notes-backend/node_modules
