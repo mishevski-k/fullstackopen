@@ -1,0 +1,1 @@
+*{box-sizing:border-box;font-family:Verdana,Geneva,Tahoma,sans-serif}.notification-container{background-color:#dcdcdc;padding:1rem;border-radius:15px;font-weight:600;color:#6a5acd;border:5px solid slateblue;margin:1rem 0}.notification-container.type-success{color:green;border-color:green}.notification-container.type-error{color:red;border-color:red}
