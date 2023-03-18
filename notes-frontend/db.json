@@ -1,0 +1,29 @@
+{
+  "notes": [
+    {
+      "content": "Note 1",
+      "important": true,
+      "id": 1
+    },
+    {
+      "content": "Note 1",
+      "important": true,
+      "id": 2
+    },
+    {
+      "content": "Note 1",
+      "important": false,
+      "id": 3
+    },
+    {
+      "content": "Kiril Mishevski Note",
+      "important": false,
+      "id": 4
+    },
+    {
+      "content": "Maja Aleksovska Note",
+      "important": true,
+      "id": 5
+    }
+  ]
+}
