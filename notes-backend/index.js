@@ -1,7 +1,21 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 
+const mongoClusterPw = process.env.MONGO_CLUSTER_PW;
+
+const notesDbUrl = `mongodb+srv://mishevski2000:${mongoClusterPw}@cluster0.plmkeby.mongodb.net/noteApp?retryWrites=true&w=majority`;
+
+mongoose.set('strictQuery',false);
+mongoose.connect(notesDbUrl);
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    important: Boolean,
+});
+
+const Note = mongoose.model('Note', noteSchema);
 
 const requestLogger = (request, response, next) => {
     console.log('Method: ', request.method);
