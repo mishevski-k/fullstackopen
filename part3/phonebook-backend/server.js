@@ -65,7 +65,7 @@ server.get(`${personsResource}/:id`, (request, response) => {
     const id = Number(request.params.id);
 
     if(id != id){
-        return response.json({code: 1000, message: 'Id given is not a number'});
+        return response.json({error: 'Id given is not a number'});
     }
 
     const person = persons.find( p => p.id === id);
@@ -73,7 +73,7 @@ server.get(`${personsResource}/:id`, (request, response) => {
     if(person){
         response.json(person);
     }else{
-        response.status(404).json({code: 1001, message: `Could not find person with id ${id}`});
+        response.status(404).json({error:`Could not find person with id ${id}`});
     }
 });
 
@@ -82,21 +82,30 @@ server.post(`${personsResource}`, (request, response) => {
 
     if(!body.name){
         return response.status(400).json({
-            code: 1101,
-            message: `Missing persons name`
+            error: `Missing persons name`
         });
     }
 
     if(!body.number){
         return response.status(400).json({
-            code: 1101,
-            message: `Missing persons number`
+            error: `Missing persons number`
+        });
+    }
+
+    const name = body.name;
+    const number = body.number;
+
+    const existingPerson = persons.find(p => p.name === name);
+
+    if(existingPerson){
+        return response.status(400).json({
+            error: `name must be unique`
         });
     }
 
     const newPerson = {
-        name: body.name,
-        number: body.number,
+        name: name,
+        number: number,
         id: generateId(),
     };
 
@@ -109,7 +118,7 @@ server.delete(`${personsResource}/:id`, (request, response) => {
     const id = Number(request.params.id);
 
     if(id != id){
-        return response.json({code: 1000, message: 'Id given is not a number'});
+        return response.json({error: 'Id given is not a number'});
     }
 
     persons.filter(p => p.id !== id);
