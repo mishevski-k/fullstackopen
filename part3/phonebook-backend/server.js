@@ -106,23 +106,19 @@ server.post(`${personsResource}`, (request, response) => {
     const name = body.name;
     const number = body.number;
 
-    const existingPerson = persons.find(p => p.name === name);
-
-    if(existingPerson){
-        return response.status(400).json({
-            error: `name must be unique`
-        });
-    }
-
-    const newPerson = {
+    const person = new Person({
         name: name,
         number: number,
-        id: generateId(),
-    };
+    });
 
-    persons = persons.concat(newPerson);
-
-    response.json(newPerson);
+    person
+        .save()
+        .then( result => {
+            response.json(result);
+        })
+        .catch( (error) => {
+            respose.status(500).json({error: "An error occured"})
+        })
 })
 
 server.delete(`${personsResource}/:id`, (request, response) => {
