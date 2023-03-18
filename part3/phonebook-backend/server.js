@@ -61,24 +61,9 @@ server.get(`${personsResource}/:id`, (request, response, next) => {
 server.post(`${personsResource}`, (request, response,next) => {
     const body = request.body;
 
-    if(!body.name){
-        return response.status(400).json({
-            error: `Missing persons name`
-        });
-    }
-
-    if(!body.number){
-        return response.status(400).json({
-            error: `Missing persons number`
-        });
-    }
-
-    const name = body.name;
-    const number = body.number;
-
     const person = new Person({
-        name: name,
-        number: number,
+        name: body.name,
+        number: body.number,
     });
 
     person
@@ -91,18 +76,6 @@ server.post(`${personsResource}`, (request, response,next) => {
 
 server.put(`${personsResource}/:id`, (request, response, next) => {
     const body = request.body;
-
-    if(!body.name){
-        return response.status(400).json({
-            error: `Missing persons name`
-        });
-    }
-
-    if(!body.number){
-        return response.status(400).json({
-            error: `Missing persons number`
-        });
-    }   
     
     const person = {
         name: body.name,
@@ -110,7 +83,7 @@ server.put(`${personsResource}/:id`, (request, response, next) => {
     };
 
     Person
-        .findByIdAndUpdate(request.params.id, person, { new: true})
+        .findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true})
         .then(result => {
             response.json(result);
         })
@@ -133,11 +106,13 @@ const unknownEnpoint = (request, response) => {
 
 server.use(unknownEnpoint);
 
-const errorHandler = (error, request, reponse, next) => {
+const errorHandler = (error, request, response, next) => {
     console.log(error.message);
 
     if(error.name === 'CastError'){
-        return reponse.status(400).send({error: "malformed parametar"})
+        return response.status(400).send({error: "malformed parametar"})
+    }else if(error.name === 'ValidationError'){
+        return response.status(400).json({error: error.message});
     }
 
     next(error);

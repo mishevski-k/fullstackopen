@@ -64,11 +64,10 @@ const App = () => {
           setNotificationMessage({type: null, message: null});
         }, 2000);
       })
-      .catch(error => {
-        setPersons(person.filter(person => person.id !== id));
-        setNotificationMessage({type: 'error', message: `Person ${person.name} not found!`})
+      .catch((error) => {
+        setNotificationMessage({type: 'error', message: error.response.data.error})
         setTimeout(() => {
-          setNotificationMessage({type: null, message: null});
+          setNotificationMessage({type: null, message: null})
         }, 2000);
       })
   }
@@ -102,6 +101,12 @@ const App = () => {
         setTimeout(() => {
           setNotificationMessage({type: null, message: null});
         }, 2000)
+      })
+      .catch((error) => {
+        setNotificationMessage({type: 'error', message: error.response.data.error})
+        setTimeout(() => {
+          setNotificationMessage({type: null, message: null})
+        }, 2000);
       })
   }
 
