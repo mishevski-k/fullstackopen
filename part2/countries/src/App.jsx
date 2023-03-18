@@ -2,6 +2,7 @@ import { useState } from 'react';
 import countriesService from './services/countriesService';
 
 import Countries from './components/Countries';
+import Filter from './components/Filter';
 
 const App = () => {
 
@@ -37,9 +38,7 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        find contries <input onKeyUp={filterCountries}></input>
-      </div>
+      <Filter handleChange={filterCountries} />
       <Countries countries={matchingCountries} handleCountryClick={showCountry}/>
     </div>
   )

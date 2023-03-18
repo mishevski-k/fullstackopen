@@ -1,4 +1,5 @@
 import Country from "./Country";
+import CountryLine from "./CountryLine";
 
 const Countries = ({countries, handleCountryClick}) => {
 
@@ -20,7 +21,7 @@ const Countries = ({countries, handleCountryClick}) => {
     return(
         <div>
             {countries.map((country) => {
-                return <div key={country.cca2}>{country.name.official}<button onClick={() => handleCountryClick(country.name.common)}>show</button></div>
+                return <CountryLine key={country.cca2} country={country} handleClick={handleCountryClick} />
             })}
         </div>
     )
