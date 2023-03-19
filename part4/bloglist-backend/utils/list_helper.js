@@ -10,7 +10,16 @@ const totalLikes = (blogs) => {
         }, 0);
 };
 
+const mostPopular = (blogs) => {
+    return blogs.length === 0
+        ? {}
+        : blogs.reduce((mostPopular, blog) => {
+            return mostPopular.likes < blog.likes ? blog : mostPopular;
+        });
+};
+
 module.exports ={
     dummy,
     totalLikes,
+    mostPopular,
 };
