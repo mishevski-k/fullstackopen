@@ -131,3 +131,27 @@ describe('most blogs', () => {
         );
     });
 });
+
+describe('most likes', () => {
+    test('of empty list is empty', () => {
+        expect(listHelper.mostLikes(emptyList)).toEqual({});
+    });
+
+    test('when list has only one blog equals to that author', () => {
+        expect(listHelper.mostLikes(listWithOfOneBlog)).toEqual(
+            {
+                author: 'Kiril Mishevski',
+                likes: 5
+            }
+        );
+    });
+
+    test('of bigger list to equal to author with most likes', () => {
+        expect(listHelper.mostLikes(blogs)).toEqual(
+            {
+                author: 'Kiril Mishevski',
+                likes: 34
+            }
+        );
+    });
+});
