@@ -18,8 +18,33 @@ const mostPopular = (blogs) => {
         });
 };
 
+const mostBlogs = (blogs) => {
+    if(blogs.length === 0){
+        return {};
+    }
+
+    const authors = blogs.reduce((accumulator, blog) => {
+        const foundBlog = accumulator.find(item => item.author === blog.author);
+        if(foundBlog){
+            foundBlog.blogs++;
+        }else{
+            const newAuthor = {
+                author: blog.author,
+                blogs: 1
+            };
+            accumulator.push(newAuthor);
+        }
+        return accumulator;
+    }, []);
+
+    return authors.reduce((accumulator, author) => {
+        return accumulator.blogs < author.blogs ? author : accumulator;
+    });
+};
+
 module.exports ={
     dummy,
     totalLikes,
     mostPopular,
+    mostBlogs
 };

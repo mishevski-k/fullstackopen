@@ -108,3 +108,26 @@ describe('most popular', () => {
         expect(listHelper.mostPopular(blogs)).toEqual(mostPopularBlog);
     });
 });
+
+describe('most blogs', () => {
+    test('of empty list is empty', () => {
+        expect(listHelper.mostBlogs(emptyList)).toEqual({});
+    });
+
+    test('when list has only one blog equals to that author', () => {
+        expect(listHelper.mostBlogs(listWithOfOneBlog)).toEqual(
+            {
+                author: 'Kiril Mishevski',
+                blogs: 1
+            });
+    });
+    
+    test('of bigger list to equal to author with most blogs', () => {
+        expect(listHelper.mostBlogs(blogs)).toEqual(
+            {
+                author: 'Robert C. Martin',
+                blogs: 3
+            }
+        );
+    });
+});
