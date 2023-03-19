@@ -8,5 +8,6 @@ Content-Type: application/json
 {
     "title": "New Blog",
     "author": "Kiril Mishevski",
+    "url": "localhost",
     "likes": 300
 }
