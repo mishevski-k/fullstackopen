@@ -4,6 +4,7 @@ const app = require('../app');
 const blogHelper = require('./blogs_test_helper');
 
 const Blog = require('../models/blog');
+const blog = require('../models/blog');
 
 const api = supertest(app);
 
@@ -132,6 +133,44 @@ describe('blogs', () => {
         const blogShouldBeUpdated = blogsAtEnd[0];
 
         expect(blogShouldBeUpdated).toEqual(blogToUpdate);
+    });
+
+    test('check deleted id if can be viewed', async () => {
+        const deletedId = await blogHelper.nonExistingId();
+
+        await api
+            .get(`/api/v1/blogs/${deletedId}`)
+            .expect(404);
+    });
+
+    test('check non existing id if casting error', async () => {
+        const randomId = Math.random() * 346;
+
+        await api
+            .get(`/api/v1/blogs/${randomId}`)
+            .expect(400);
+    });
+
+    test('check if validation url works for updating blog', async () => {
+        const blogsAtStart = await blogHelper.blogsInDb();
+        const blogForUpdating = blogsAtStart[0];
+        blogForUpdating.url = '';
+
+        await api
+            .put(`/api/v1/blogs/${blogForUpdating.id}`)
+            .send(blogForUpdating)
+            .expect(400);
+    });
+
+    test('check if validation title works for updating blog', async () => {
+        const blogsAtStart = await blogHelper.blogsInDb();
+        const blogForUpdating = blogsAtStart[0];
+        blogForUpdating.title = '';
+
+        await api
+            .put(`/api/v1/blogs/${blogForUpdating.id}`)
+            .send(blogForUpdating)
+            .expect(400);
     });
 });
 

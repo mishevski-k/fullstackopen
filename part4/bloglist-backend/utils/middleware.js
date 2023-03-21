@@ -12,7 +12,7 @@ const uknownEndpoint = (request, response) => {
 const errorHanler = (error, request, response, next) => {
     logger.error(error.message);
 
-    if(error.name === 'CastingError'){
+    if(error.name === 'CastError'){
         return response.status(400).json({error: 'Malformatted id'});
     }else if(error.name === 'ValidationError'){
         return response.status(400).json({error: error.message});
