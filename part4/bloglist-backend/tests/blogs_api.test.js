@@ -100,6 +100,25 @@ describe('blogs', () => {
             .send(newBlog)
             .expect(400);
     });
+
+    test('to delete a blog', async () => {
+        const blogsAtStart = await blogHelper.blogsInDb();
+        const blogToDelete = blogsAtStart[0];
+
+        await api
+            .delete(`/api/v1/blogs/${blogToDelete.id}`)
+            .expect(204);
+
+        await api
+            .get(`/api/v1/blogs/${blogToDelete.id}`)
+            .expect(404);
+
+        const blogsAtEnd = await blogHelper.blogsInDb();
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+
+        const ids = blogsAtEnd.map(blog => blog.id);
+        expect(ids).not.toContain(blogToDelete.id);
+    });
 });
 
 
