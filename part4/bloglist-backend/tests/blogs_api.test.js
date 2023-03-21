@@ -14,13 +14,24 @@ beforeEach(async () => {
     await newBlog.save();
     newBlog = new Blog(blogHelper.initialBlogs[1]);
     await newBlog.save();
-});
+}, 10000);
 
-test('notes are returned as json', async () => {
-    await api
-        .get('/api/v1/blogs')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+
+
+describe('blogs', () => {
+    test('blogs are returned as json', async () => {
+        await api
+            .get('/api/v1/blogs')
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+    });
+
+    test('blogs contain id', async () => {
+        const blogs = await blogHelper.blogsInDb();
+        const firstBlog = blogs[0];
+
+        expect(firstBlog.id).toBeDefined();
+    });
 });
 
 
