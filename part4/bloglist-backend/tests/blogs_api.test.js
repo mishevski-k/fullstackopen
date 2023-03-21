@@ -8,13 +8,13 @@ const Blog = require('../models/blog');
 const api = supertest(app);
 
 beforeEach(async () => {
-    Blog.deleteMany({});
+    await Blog.deleteMany({});
 
     let newBlog = new Blog(blogHelper.initialBlogs[0]);
     await newBlog.save();
     newBlog = new Blog(blogHelper.initialBlogs[1]);
     await newBlog.save();
-}, 10000);
+}, 100000);
 
 
 
@@ -31,6 +31,31 @@ describe('blogs', () => {
         const firstBlog = blogs[0];
 
         expect(firstBlog.id).toBeDefined();
+    });
+
+    test('a valid new blog can be created', async () => {
+        const newBlog = {
+            author: 'Kiril Mishevski',
+            title: 'Testing Blog',
+            url: 'localhost:3001',
+            likes: 13
+        };
+
+        await api
+            .post('/api/v1/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        const blogsAtEnd = await blogHelper.blogsInDb();
+        expect(blogsAtEnd).toHaveLength(blogHelper.initialBlogs.length + 1);
+
+        const lastBlog = blogsAtEnd[blogsAtEnd.length - 1];
+        console.log(lastBlog);
+        expect(lastBlog.author).toBe(newBlog.author);
+        expect(lastBlog.title).toBe(newBlog.title);
+        expect(lastBlog.url).toBe(newBlog.url);
+        expect(lastBlog.likes).toBe(newBlog.likes);
     });
 });
 
