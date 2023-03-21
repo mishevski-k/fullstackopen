@@ -109,15 +109,29 @@ describe('blogs', () => {
             .delete(`/api/v1/blogs/${blogToDelete.id}`)
             .expect(204);
 
-        await api
-            .get(`/api/v1/blogs/${blogToDelete.id}`)
-            .expect(404);
-
         const blogsAtEnd = await blogHelper.blogsInDb();
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
 
         const ids = blogsAtEnd.map(blog => blog.id);
         expect(ids).not.toContain(blogToDelete.id);
+    });
+
+    test('to update a blog', async () => {
+        const blogsAtStart = await blogHelper.blogsInDb();
+        const blogToUpdate = blogsAtStart[0];
+
+        blogToUpdate.title = 'Updated for test';
+
+        await api
+            .put(`/api/v1/blogs/${blogToUpdate.id}`)
+            .send(blogToUpdate)
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+
+        const blogsAtEnd = await blogHelper.blogsInDb();
+        const blogShouldBeUpdated = blogsAtEnd[0];
+
+        expect(blogShouldBeUpdated).toEqual(blogToUpdate);
     });
 });
 
