@@ -57,6 +57,26 @@ describe('blogs', () => {
         expect(lastBlog.url).toBe(newBlog.url);
         expect(lastBlog.likes).toBe(newBlog.likes);
     });
+
+    test('likes parametar will default to 0 if missing', async () => {
+        const newBlog = {
+            author: 'Kiril Mishevski',
+            title: 'testing likes',
+            url: 'localhost:3001'
+        };
+
+        await api
+            .post('/api/v1/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        const blogsAtEnd = await blogHelper.blogsInDb();
+        const lastBlog = blogsAtEnd[blogsAtEnd.length - 1];
+
+        expect(lastBlog.likes).toBeDefined();
+        expect(lastBlog.likes).toEqual(0);
+    });
 });
 
 
