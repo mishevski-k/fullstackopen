@@ -28,8 +28,16 @@ const blogsInDb = async () => {
     return blogs.map(blog => blog.toJSON());
 };
 
+const lastBlogInDb = async () => {
+    const blogs = await Blog.find({});
+    return blogs.length > 0
+        ? blogs[blogs.length - 1]
+        : {};
+};
+
 module.exports = {
     initialBlogs,
     nonExistingId,
-    blogsInDb
+    blogsInDb,
+    lastBlogInDb
 };

@@ -51,7 +51,7 @@ describe('blogs', () => {
         expect(blogsAtEnd).toHaveLength(blogHelper.initialBlogs.length + 1);
 
         const lastBlog = blogsAtEnd[blogsAtEnd.length - 1];
-        console.log(lastBlog);
+
         expect(lastBlog.author).toBe(newBlog.author);
         expect(lastBlog.title).toBe(newBlog.title);
         expect(lastBlog.url).toBe(newBlog.url);
@@ -71,11 +71,34 @@ describe('blogs', () => {
             .expect(201)
             .expect('Content-Type', /application\/json/);
 
-        const blogsAtEnd = await blogHelper.blogsInDb();
-        const lastBlog = blogsAtEnd[blogsAtEnd.length - 1];
+        const lastBlog = await blogHelper.lastBlogInDb();
 
         expect(lastBlog.likes).toBeDefined();
         expect(lastBlog.likes).toEqual(0);
+    });
+
+    test('cant create blog without title', async () => {
+        const newBlog = {
+            author: 'Kiril Mishevski',
+            url: 'localhost'
+        };
+
+        await api  
+            .post('/api/v1/blogs')
+            .send(newBlog)
+            .expect(400);
+    });
+
+    test('cant create blog without url', async () => {
+        const newBlog = {
+            author: 'Kiril Mishevski',
+            title: 'Missing url',
+        };
+
+        await api   
+            .post('/api/v1/blogs')
+            .send(newBlog)
+            .expect(400);
     });
 });
 
