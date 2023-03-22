@@ -4,6 +4,7 @@ GET http://localhost:3001/api/v1/blogs
 
 POST http://localhost:3001/api/v1/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pc2hldnNraS1rIiwiaWQiOiI2NDFiNWI1ZDZiMmEwZmRjNjU5MzJlZjgiLCJpYXQiOjE2Nzk1MTkyMjksImV4cCI6MTY3OTYwNTYyOX0.cG46kS5v6hC3T5Bln0qhM9uh8eQZrndcfQO5jSlk-g0
 
 {
     "title": "New Blog",
