@@ -10,3 +10,24 @@ Content-Type: application/json
     "name": "Kiril Mishevski",
     "password": "sudo"
 }
+
+###
+
+POST http://localhost:3001/api/v1/users
+Content-Type: application/json
+
+{
+    "username": "mi",
+    "name": "Kiril Mishevski",
+    "password": "something"
+}
+
+###
+
+POST http://localhost:3001/api/v1/users
+Content-Type: application/json
+
+{
+    "name": "Kiril Mishevski",
+    "password": "sudo"
+}
