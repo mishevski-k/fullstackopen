@@ -4,9 +4,33 @@ const app = require('../app');
 const api = supertest(app);
 const helper = require('./test_helper');
 const Note = require('../models/note');
+const User = require('../models/user');
+
+const GetRootUser = async () => {
+    const user = {
+        username: 'root',
+        password: 'sudo',
+    }
+
+    return await api
+        .post('/api/login')
+        .send(user);
+}
 
 beforeEach(async () => {
     await Note.deleteMany({});
+    await User.deleteMany({});
+
+    const rootUser = {
+        username: 'root',
+        password: 'sudo'
+    };
+
+    await api
+        .post('/api/users')
+        .send(rootUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
 
     const noteObject = helper.initialNotes
         .map(note => new Note(note))
@@ -43,6 +67,10 @@ test('note without content is not added', async () => {
 });
 
 test('a valid note can be added', async () => {
+    const user = await GetRootUser();
+
+    const token = user.body.token;
+
     const newNote = {
         content: 'async/await simplifies making async calls',
         important: true
@@ -50,6 +78,7 @@ test('a valid note can be added', async () => {
 
     await api
         .post('/api/notes')
+        .auth(token, {type: 'bearer'})
         .send(newNote)
         .expect(201)
         .expect('Content-Type', /application\/json/);

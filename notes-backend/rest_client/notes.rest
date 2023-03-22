@@ -12,6 +12,7 @@ DELETE http://localhost:3001/api/notes/3
 
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pc2hldnNraS1rIiwiaWQiOiI2NDFiNDYwODQ0ODg2OWU0ODYxN2FmYzkiLCJpYXQiOjE2Nzk1MTE4ODcsImV4cCI6MTY3OTUxNTQ4N30.85lqvR9s2mvqNW8JSVzjV2N4bYUNZbFPGYJ_EMIbRm8
 
 {
     "content": "VS code rest client is a pretty handy tool",
