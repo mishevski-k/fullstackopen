@@ -4,7 +4,8 @@
         "commonjs": true,
         "es2021": true,
         "node": true,
-        "jest": true
+        "jest": true,
+        "express": true
     },
     "extends": "eslint:recommended",
     "overrides": [
