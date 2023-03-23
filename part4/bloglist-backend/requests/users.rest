@@ -1,0 +1,22 @@
+GET http://localhost:3001/api/v1/users
+
+###
+
+POST http://localhost:3001/api/v1/users
+Content-Type: application/json
+
+{
+    "username": "kiril-m",
+    "name": "Kiril Mishevski",
+    "password": "sudo"
+}
+
+###
+
+POST http://localhost:3001/api/v1/auth/login
+Content-Type: application/json
+
+{
+    "username": "kiril-m",
+    "password": "sudo"
+}
