@@ -3,12 +3,18 @@ import Note from './components/Note'
 import Notification from './components/Notification'
 import Footer from './components/Footer'
 import noteService from './services/notesService'
+import loginService from './services/loginService';
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
 
 const App = () => {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notes, setNotes] = useState([]);
+  const [newNote, setNewNote] = useState('');
+  const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     noteService
@@ -17,6 +23,15 @@ const App = () => {
         setNotes(initialNotes)
       })
   }, [])
+
+  useEffect(() => {
+    const loggedUserJson = window.localStorage.getItem('loggedNoteappUser');
+    if(loggedUserJson){
+      const user = JSON.parse(loggedUserJson);
+      setUser(user);
+      noteService.setToken(user.token);
+    }
+  }, []);
 
   const addNote = (event) => {
     event.preventDefault()
@@ -35,6 +50,30 @@ const App = () => {
 
   const handleNoteChange = (event) => {
     setNewNote(event.target.value)
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    
+    try {
+      const user = await loginService.login({
+        username, password,
+      });
+
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      );
+
+      noteService.setToken(user.token);
+      setUser(user);
+      setUsername('');
+      setPassword('');
+    } catch (excepetion){
+      setErrorMessage('Wrong credentials');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000)
+    }
   }
 
   const notesToShow = showAll
@@ -64,6 +103,13 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
+
+      {!user && LoginForm({username, setUsername, password, setPassword, handleSubmit: handleLogin})}
+      {user && <div>
+          <p>{user.name} logged in</p>
+          {NoteForm({HandleSubmit: addNote, newNote, handleNoteChange})}
+        </div>}
+
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
@@ -80,10 +126,6 @@ const App = () => {
           )}
         </ul>
       </ul>
-      <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button type="submit">save</button>
-      </form>
       <Footer />
     </div>
   )
