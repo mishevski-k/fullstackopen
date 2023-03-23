@@ -2,13 +2,41 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const blogHelper = require('./blogs_test_helper');
+const bcrypt = require('bcrypt');
 
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const api = supertest(app);
 
+const getRootUser = async () => {
+    const rootUser = {
+        username: 'roki',
+        password: 'sudo'
+    };
+
+    const response = await api
+        .post('/api/v1/auth/login')
+        .send(rootUser);
+
+    return response.body;
+}
+
 beforeEach(async () => {
     await Blog.deleteMany({});
+    await User.deleteMany({});
+
+    let rootUser = {
+        username: 'roki',
+        password: 'sudo'
+    };
+
+    await api
+    .post('/api/v1/users')
+    .send(rootUser)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
 
     let newBlog = new Blog(blogHelper.initialBlogs[0]);
     await newBlog.save();
@@ -34,6 +62,9 @@ describe('blogs', () => {
     });
 
     test('a valid new blog can be created', async () => {
+
+        const user = await getRootUser();
+
         const newBlog = {
             author: 'Kiril Mishevski',
             title: 'Testing Blog',
@@ -43,6 +74,7 @@ describe('blogs', () => {
 
         await api
             .post('/api/v1/blogs')
+            .auth(user.token, {type: 'bearer'})
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/);
@@ -59,6 +91,10 @@ describe('blogs', () => {
     });
 
     test('likes parametar will default to 0 if missing', async () => {
+
+        const user = await getRootUser();
+
+
         const newBlog = {
             author: 'Kiril Mishevski',
             title: 'testing likes',
@@ -67,6 +103,7 @@ describe('blogs', () => {
 
         await api
             .post('/api/v1/blogs')
+            .auth(user.token, {type: 'bearer'})
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/);
@@ -78,6 +115,8 @@ describe('blogs', () => {
     });
 
     test('cant create blog without title', async () => {
+        const user = await getRootUser();
+
         const newBlog = {
             author: 'Kiril Mishevski',
             url: 'localhost'
@@ -85,11 +124,14 @@ describe('blogs', () => {
 
         await api  
             .post('/api/v1/blogs')
+            .auth(user.token, {type: 'bearer'})
             .send(newBlog)
             .expect(400);
     });
 
     test('cant create blog without url', async () => {
+        const user = await getRootUser();
+
         const newBlog = {
             author: 'Kiril Mishevski',
             title: 'Missing url',
@@ -97,26 +139,42 @@ describe('blogs', () => {
 
         await api   
             .post('/api/v1/blogs')
+            .auth(user.token, {type: 'bearer'})
             .send(newBlog)
             .expect(400);
     });
 
     test('to delete a blog', async () => {
+        const user = await getRootUser();
+
+        const blogToDelete = {
+            author: 'Kiril Mishevski',
+            title: 'to be deleted',
+            url: 'localhost'
+        };
+
+        const savedBlog = await api  
+            .post('/api/v1/blogs')
+            .auth(user.token, {type: 'bearer'})
+            .send(blogToDelete)
+            .expect(201);
+
         const blogsAtStart = await blogHelper.blogsInDb();
-        const blogToDelete = blogsAtStart[0];
 
         await api
-            .delete(`/api/v1/blogs/${blogToDelete.id}`)
+            .delete(`/api/v1/blogs/${savedBlog.body.id}`)
+            .auth(user.token, {type: 'bearer'})
             .expect(204);
 
         const blogsAtEnd = await blogHelper.blogsInDb();
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
 
         const ids = blogsAtEnd.map(blog => blog.id);
-        expect(ids).not.toContain(blogToDelete.id);
+        expect(ids).not.toContain(savedBlog.body.id);
     });
 
     test('to update a blog', async () => {
+
         const blogsAtStart = await blogHelper.blogsInDb();
         const blogToUpdate = blogsAtStart[0];
 
@@ -151,6 +209,7 @@ describe('blogs', () => {
     });
 
     test('check if validation url works for updating blog', async () => {
+        
         const blogsAtStart = await blogHelper.blogsInDb();
         const blogForUpdating = blogsAtStart[0];
         blogForUpdating.url = '';
