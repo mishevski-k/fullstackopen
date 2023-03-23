@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
-const User = require('../models/user');
-const jwt = require('jsonwebtoken');
 
 blogsRouter.get('/', async (request, response, next) => {
     try {
@@ -29,13 +27,12 @@ blogsRouter.get('/:id', async (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
     const body = request.body;
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
-    if(!(decodedToken.id)){
-        return response.status(401).json({error: 'token invalid'});
+    if(!(request.user)){
+        return response.status(401).json({error: 'No authorization found'});
     }
 
-    const user = await User.findById(decodedToken.id);
+    const user = request.user;
+
     body.user = user.id;
 
     const blog = new Blog(body);
@@ -65,13 +62,11 @@ blogsRouter.put('/:id', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next ) => {
     try {
-        const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
-        if(!(decodedToken.id)){
-            return response.status(401).json({error: 'token invalid'});
+        if(!(request.user)){
+            return response.status(401).json({error: 'No authorization found'});
         }
-
-        const user = await User.findById(decodedToken.id);
+    
+        const user = request.user;
 
         const blog = await Blog.findById(request.params.id);
 
