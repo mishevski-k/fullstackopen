@@ -24,12 +24,18 @@ const errorHanler = (error, request, response, next) => {
 };
 
 const tokenExtractor = (request, response, next) => {
-    const authorization = request.get('authorization');
+    try {
+        const authorization = request.get('authorization');
 
-    if(authorization && authorization.startsWith('Bearer ')){
-        request.token = authorization.replace('Bearer ', '');
+        if(authorization && authorization.startsWith('Bearer ')){
+            request.token = authorization.replace('Bearer ', '');
+        }
+
+        next();
+    } catch (exception){
+        response.status(400).json({error: 'invalid token'});
     }
-    return null;
+    const authorization = request.get('authorization');
 };
 
 module.exports = {
