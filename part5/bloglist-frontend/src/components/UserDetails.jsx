@@ -1,8 +1,8 @@
 import React from 'react';
 
-const UserDetails = ({user}) => {
+const UserDetails = ({user, handleLogout}) => {
     return(
-        <div><p>{user.name} logged in</p></div>
+        <div>{user.name} logged in<button onClick={handleLogout}>logout</button></div>
     );
 };
 

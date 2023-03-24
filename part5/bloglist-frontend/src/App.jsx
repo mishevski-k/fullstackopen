@@ -18,11 +18,23 @@ const App = () => {
         );
     }, []);
 
+    useEffect(() => {
+        const user = window.sessionStorage.getItem('user');
+
+        if(user){
+            setUser(JSON.parse(user));
+        }
+    }, []);
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
         try {
             const user = await authService.login({username, password});
+
+            window.sessionStorage.setItem('B_TOKEN', user.token);
+            window.sessionStorage.setItem('user', JSON.stringify({username: user.username, name: user.name}));
+
             setUser(user);
             setUsername('');
             setPassword('');
@@ -31,12 +43,18 @@ const App = () => {
         }   
     };
 
+    const handleLogout = () => {
+        window.sessionStorage.removeItem('B_TOKEN');
+        window.sessionStorage.removeItem('user');
+        setUser(null);
+    };
+
     return (
         <div>
             <h2>blogs</h2>
             {!user && LoginFrom({username, setUsername, password, setPassword, handleSubmit: handleLogin})}
             {user && <div>
-                <UserDetails user={user} />
+                <UserDetails user={user} handleLogout={handleLogout}/>
                 <Blogs blogs={blogs} />
             </div>}
 
