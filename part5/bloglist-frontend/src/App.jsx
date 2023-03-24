@@ -5,12 +5,16 @@ import blogService from './services/blogs';
 import authService from './services/auth';
 import LoginFrom from './components/LoginForm';
 import UserDetails from './components/UserDetails';
+import BlogForm from './components/BlogForm';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
+    const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
+    const [url, setUrl] = useState('');
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -49,12 +53,28 @@ const App = () => {
         setUser(null);
     };
 
+    const addBlog = async (event) => {
+        event.preventDefault();
+        const blog = {
+            title: title,
+            author: author,
+            url: url
+        };
+
+        const savedBlog = await blogService.create(blog);
+        setBlogs(blogs.concat(savedBlog));
+        setAuthor('');
+        setTitle('');
+        setUrl('');
+    };
+
     return (
         <div>
             <h2>blogs</h2>
             {!user && LoginFrom({username, setUsername, password, setPassword, handleSubmit: handleLogin})}
             {user && <div>
                 <UserDetails user={user} handleLogout={handleLogout}/>
+                <BlogForm handleSubmit={addBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
                 <Blogs blogs={blogs} />
             </div>}
 
