@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blogs from './components/Blogs';
 import blogService from './services/blogs';
 import authService from './services/auth';
@@ -8,6 +8,7 @@ import UserDetails from './components/UserDetails';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import './assets/css/main.css';
+import Toggle from './components/Toggle';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -18,6 +19,7 @@ const App = () => {
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
     const [message, setMessage] = useState({type: null, text: null});
+    const BlogFormRef = useRef();
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -114,6 +116,7 @@ const App = () => {
 
         try {
             const savedBlog = await blogService.create(blog);
+            BlogFormRef.current.toggleVisibility();
             setBlogs(blogs.concat(savedBlog));
             setAuthor('');
             setTitle('');
@@ -133,7 +136,9 @@ const App = () => {
             {!user && LoginFrom({username, setUsername, password, setPassword, handleSubmit: handleLogin})}
             {user && <div>
                 <UserDetails user={user} handleLogout={handleLogout}/>
-                <BlogForm handleSubmit={addBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
+                <Toggle default={false} showLabel='new blog' hideLabel='cancel' ref={BlogFormRef}>
+                    <BlogForm handleSubmit={addBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
+                </Toggle>
                 <Blogs blogs={blogs} />
             </div>}
 
