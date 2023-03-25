@@ -13,19 +13,14 @@ const getAll = async () => {
 };
 
 const create = async (blog) => {
-    try {
+    token = window.sessionStorage.getItem('B_TOKEN');
 
-        token = window.sessionStorage.getItem('B_TOKEN');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
 
-        const config = {
-            headers: { Authorization: `Bearer ${token}` },
-        };
-
-        const request = await axios.post(baseUrl, blog, config);
-        return request.data;
-    } catch (exception){
-        console.log('error');
-    }
+    const request = await axios.post(baseUrl, blog, config);
+    return request.data;
 };
 
 export default { getAll, create };

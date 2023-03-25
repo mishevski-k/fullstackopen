@@ -6,6 +6,8 @@ import authService from './services/auth';
 import LoginFrom from './components/LoginForm';
 import UserDetails from './components/UserDetails';
 import BlogForm from './components/BlogForm';
+import Notification from './components/Notification';
+import './assets/css/main.css';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -15,6 +17,7 @@ const App = () => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
+    const [message, setMessage] = useState({type: null, text: null});
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -30,47 +33,103 @@ const App = () => {
         }
     }, []);
 
+    const removeNotification = () => {
+        setInterval(() => {
+            setMessage({type: null, text: null});
+        }, 3000);
+    };
+
+    const setError = (message) => {
+        setMessage({type: 'error', text: message});
+        removeNotification();
+    };
+
+    const setInfo = (message) => {
+        setMessage({type: 'info', text: message});
+        removeNotification();
+    };
+
+    const setSuccess = (message) => {
+        setMessage({type: 'success', text: message});
+        removeNotification();
+    };
+
     const handleLogin = async (event) => {
         event.preventDefault();
+
+        if(!(username) || username === ''){
+            return setError('Username is required');
+        }
+
+        if(!(password) || password === ''){
+            return setError('Password is required');        
+        }
 
         try {
             const user = await authService.login({username, password});
 
+            console.log(user);
             window.sessionStorage.setItem('B_TOKEN', user.token);
             window.sessionStorage.setItem('user', JSON.stringify({username: user.username, name: user.name}));
 
             setUser(user);
             setUsername('');
             setPassword('');
-        } catch (exception) {
-            console.log('Error', exception);
-        }   
+
+            setInfo(`Welcome back ${user.name}`);
+
+        }catch(excepetion){
+            setError('Username or password dont match');
+        }
     };
 
     const handleLogout = () => {
         window.sessionStorage.removeItem('B_TOKEN');
         window.sessionStorage.removeItem('user');
         setUser(null);
+
+        setInfo('Logged out');
     };
 
     const addBlog = async (event) => {
         event.preventDefault();
+
+        if(!(title) || title === ''){
+            return setError('Title for Blog is required');
+        }
+
+        if(!(author) || author === ''){
+            return setError('Author for Blog is required');
+        }
+
+        if(!(url) || url === ''){
+            return setError('Url for Blog is required');
+        }
+
         const blog = {
             title: title,
             author: author,
             url: url
         };
 
-        const savedBlog = await blogService.create(blog);
-        setBlogs(blogs.concat(savedBlog));
-        setAuthor('');
-        setTitle('');
-        setUrl('');
+        try {
+            const savedBlog = await blogService.create(blog);
+            setBlogs(blogs.concat(savedBlog));
+            setAuthor('');
+            setTitle('');
+            setUrl('');
+
+            setSuccess(`a new Blog '${savedBlog.title}' by ${savedBlog.author} added`);
+
+        } catch (excepetion) {
+            console.log(excepetion);
+        }
     };
 
     return (
         <div>
             <h2>blogs</h2>
+            <Notification message={message} />
             {!user && LoginFrom({username, setUsername, password, setPassword, handleSubmit: handleLogin})}
             {user && <div>
                 <UserDetails user={user} handleLogout={handleLogout}/>
