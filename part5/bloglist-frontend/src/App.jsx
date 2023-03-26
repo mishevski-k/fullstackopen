@@ -15,9 +15,7 @@ const App = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [url, setUrl] = useState('');
+
     const [message, setMessage] = useState({type: null, text: null});
     const BlogFormRef = useRef();
 
@@ -93,39 +91,15 @@ const App = () => {
         setInfo('Logged out');
     };
 
-    const addBlog = async (event) => {
-        event.preventDefault();
-
-        if(!(title) || title === ''){
-            return setError('Title for Blog is required');
-        }
-
-        if(!(author) || author === ''){
-            return setError('Author for Blog is required');
-        }
-
-        if(!(url) || url === ''){
-            return setError('Url for Blog is required');
-        }
-
-        const blog = {
-            title: title,
-            author: author,
-            url: url
-        };
-
-        try {
-            const savedBlog = await blogService.create(blog);
-            BlogFormRef.current.toggleVisibility();
+    const addBlog = async (blogObject) => {
+        try{
+            const savedBlog = await blogService.create(blogObject);
             setBlogs(blogs.concat(savedBlog));
-            setAuthor('');
-            setTitle('');
-            setUrl('');
-
             setSuccess(`a new Blog '${savedBlog.title}' by ${savedBlog.author} added`);
-
-        } catch (excepetion) {
-            console.log(excepetion);
+            BlogFormRef.current.toggleVisibility();
+            return savedBlog;
+        }catch(error){
+            setError(error.response.data.error);
         }
     };
 
@@ -137,7 +111,7 @@ const App = () => {
             {user && <div>
                 <UserDetails user={user} handleLogout={handleLogout}/>
                 <Toggle default={false} showLabel='new blog' hideLabel='cancel' ref={BlogFormRef}>
-                    <BlogForm handleSubmit={addBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
+                    <BlogForm createBlog={addBlog}/>
                 </Toggle>
                 <Blogs blogs={blogs} />
             </div>}
