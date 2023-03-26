@@ -12,7 +12,7 @@ blogsRouter.get('/', async (request, response, next) => {
 
 blogsRouter.get('/:id', async (request, response, next) => {
     try {
-        const blog = await Blog.findById(request.params.id);
+        const blog = await Blog.findById(request.params.id).populate('user');
 
         if(blog){
             response.json(blog);
@@ -39,6 +39,8 @@ blogsRouter.post('/', async (request, response, next) => {
     try {
         const savedBlog = await blog.save();
 
+        savedBlog.populate('user');
+
         user.blogs = user.blogs.concat(savedBlog.id);
         await user.save();
 
@@ -52,7 +54,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
     const blog = request.body;
 
     try {
-        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true});
+        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true}).populate('user');
         response.json(updatedBlog);
     } catch ( exception ){
         next(exception);
