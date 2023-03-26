@@ -103,6 +103,14 @@ const App = () => {
         }
     };
 
+    const updateBlog = async (blogObject) => {
+        try {
+            const updatedBlog = await blogService.update(blogObject);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div>
             <h2>blogs</h2>
@@ -113,7 +121,7 @@ const App = () => {
                 <Toggle default={false} showLabel='new blog' hideLabel='cancel' ref={BlogFormRef}>
                     <BlogForm createBlog={addBlog}/>
                 </Toggle>
-                <Blogs blogs={blogs} />
+                <Blogs blogs={blogs} handleUpdate={updateBlog} />
             </div>}
 
         </div>
