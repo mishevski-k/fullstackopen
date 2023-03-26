@@ -10,7 +10,7 @@ const Blogs = ({ blogs }) => {
     }
 
     return(
-        <div>
+        <div className='blog-items'>
             {blogs.map(blog =>
                 <Blog key={blog.id} blog={blog} />
             )}
