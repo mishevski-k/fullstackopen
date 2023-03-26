@@ -28,4 +28,15 @@ const update = async (blog) => {
     return request.data;
 };
 
-export default { getAll: getAll, create: create,update: update };
+const deleteBlog = async (id) => {
+    token = window.sessionStorage.getItem('B_TOKEN');
+
+    const config = {
+        headers: { Authorization: `Bearer ${token}`}
+    };
+
+    const request = await axios.delete(`${baseUrl}/${id}`, config);
+    return request.data;
+}
+
+export default {getAll, create, update, deleteBlog };

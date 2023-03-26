@@ -107,8 +107,20 @@ const App = () => {
         try {
             const updatedBlog = await blogService.update(blogObject);
         } catch (error) {
-            console.log(error);
+            setError(error.response.data.error);
         }
+    }
+
+    const deleteBlog = async (blogObject) => {
+        if(window.confirm(`Remove ${blogObject.title} by ${blogObject.author}`)){
+            try {
+                await blogService.deleteBlog(blogObject.id);
+                setBlogs(blogs.filter(blog => blog.id !== blogObject.id));
+            } catch(error){
+                setError(error.response.data.error);
+            }
+        }
+
     }
 
     return (
@@ -121,7 +133,7 @@ const App = () => {
                 <Toggle default={false} showLabel='new blog' hideLabel='cancel' ref={BlogFormRef}>
                     <BlogForm createBlog={addBlog}/>
                 </Toggle>
-                <Blogs blogs={blogs} handleUpdate={updateBlog} />
+                <Blogs blogs={blogs} handleUpdate={updateBlog} handleDelete={deleteBlog} />
             </div>}
 
         </div>
