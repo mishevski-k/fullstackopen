@@ -94,6 +94,7 @@ const App = () => {
     const addBlog = async (blogObject) => {
         try{
             const savedBlog = await blogService.create(blogObject);
+            savedBlog.user = user;
             setBlogs(blogs.concat(savedBlog));
             setSuccess(`a new Blog '${savedBlog.title}' by ${savedBlog.author} added`);
             BlogFormRef.current.toggleVisibility();
