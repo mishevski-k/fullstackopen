@@ -2,7 +2,7 @@ import {useState} from 'react';
 
 const Blog = ({blog, handleUpdate, handleDelete}) => {
     const [visibility, setVisibility] = useState(false);
-    const [likes, setLikes] = useState(blog.likes);
+    const [likes, setLikes] = useState(Number(blog.likes));
 
     const showDetails = {display: visibility ? 'block': 'none'};
 
