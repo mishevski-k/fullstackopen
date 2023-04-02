@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blogs from './components/Blogs';
 import blogService from './services/blogs';
 import authService from './services/auth';
@@ -8,20 +8,20 @@ import UserDetails from './components/UserDetails';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import './assets/css/main.css';
+import Toggle from './components/Toggle';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [url, setUrl] = useState('');
+
     const [message, setMessage] = useState({type: null, text: null});
+    const BlogFormRef = useRef();
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
-            setBlogs( blogs )
+            setBlogs( blogs.sort((first, second) => second.likes > first.likes ? 1 : (first.likes > second.likes) ? -1 : 0) )
         );
     }, []);
 
@@ -91,40 +91,37 @@ const App = () => {
         setInfo('Logged out');
     };
 
-    const addBlog = async (event) => {
-        event.preventDefault();
-
-        if(!(title) || title === ''){
-            return setError('Title for Blog is required');
-        }
-
-        if(!(author) || author === ''){
-            return setError('Author for Blog is required');
-        }
-
-        if(!(url) || url === ''){
-            return setError('Url for Blog is required');
-        }
-
-        const blog = {
-            title: title,
-            author: author,
-            url: url
-        };
-
-        try {
-            const savedBlog = await blogService.create(blog);
+    const addBlog = async (blogObject) => {
+        try{
+            const savedBlog = await blogService.create(blogObject);
             setBlogs(blogs.concat(savedBlog));
-            setAuthor('');
-            setTitle('');
-            setUrl('');
-
             setSuccess(`a new Blog '${savedBlog.title}' by ${savedBlog.author} added`);
-
-        } catch (excepetion) {
-            console.log(excepetion);
+            BlogFormRef.current.toggleVisibility();
+            return savedBlog;
+        }catch(error){
+            setError(error.response.data.error);
         }
     };
+
+    const updateBlog = async (blogObject) => {
+        try {
+            const updatedBlog = await blogService.update(blogObject);
+        } catch (error) {
+            setError(error.response.data.error);
+        }
+    }
+
+    const deleteBlog = async (blogObject) => {
+        if(window.confirm(`Remove ${blogObject.title} by ${blogObject.author}`)){
+            try {
+                await blogService.deleteBlog(blogObject.id);
+                setBlogs(blogs.filter(blog => blog.id !== blogObject.id));
+            } catch(error){
+                setError(error.response.data.error);
+            }
+        }
+
+    }
 
     return (
         <div>
@@ -133,8 +130,10 @@ const App = () => {
             {!user && LoginFrom({username, setUsername, password, setPassword, handleSubmit: handleLogin})}
             {user && <div>
                 <UserDetails user={user} handleLogout={handleLogout}/>
-                <BlogForm handleSubmit={addBlog} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
-                <Blogs blogs={blogs} />
+                <Toggle default={false} showLabel='new blog' hideLabel='cancel' ref={BlogFormRef}>
+                    <BlogForm createBlog={addBlog}/>
+                </Toggle>
+                <Blogs blogs={blogs} handleUpdate={updateBlog} handleDelete={deleteBlog} />
             </div>}
 
         </div>
