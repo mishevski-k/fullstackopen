@@ -47,5 +47,24 @@ describe('Blog app', function(){
       cy.get('#blog-create').click();
       cy.contains('Testing title Admin');
     });
+
+    describe('When we have a blog', function(){
+      beforeEach(function(){
+        cy.contains('new blog').click();
+        cy.get('#blog-title').type('Testing title');
+        cy.get('#blog-author').type('Admin');
+        cy.get('#blog-url').type('localhost');
+        cy.get('#blog-create').click();
+      });
+      
+      it('a blog can be liked', function(){
+        cy.get('.blog-item').eq(0).contains('show').click();
+        cy.get('.blog-item').eq(0).get('.like-blog').click();
+        cy.get('.blog-item').eq(0).get('.blog-likes').contains(1)
+      })
+  
+    });
   });
+
+
 });
