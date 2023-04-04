@@ -1,0 +1,19 @@
+{
+  "name": "bloglist-e2e",
+  "version": "1.0.0",
+  "description": "End-to-End tests for bloglist application",
+  "main": "index.js",
+  "scripts": {
+    "start": "cypress open"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "test"
+  ],
+  "author": "Kiril Mishevski",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^12.9.0"
+  }
+}
