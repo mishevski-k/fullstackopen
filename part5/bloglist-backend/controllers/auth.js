@@ -23,7 +23,7 @@ authRouter.post('/login', async (request, response, next) => {
 
         const token = jwt.sign(tokenisedUser, process.env.SECRET, {expiresIn: 24 * 60 * 60});
 
-        response.json({token: token, username: user.username, name: user.name});
+        response.json({token: token, username: user.username, name: user.name, id: user.id});
     } catch ( exception ){
         next(exception);
     }

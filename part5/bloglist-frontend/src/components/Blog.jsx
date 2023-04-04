@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-const Blog = ({blog, handleUpdate, handleDelete}) => {
+const Blog = ({blog, handleUpdate, handleDelete, user}) => {
     const [visibility, setVisibility] = useState(false);
     const [likes, setLikes] = useState(Number(blog.likes));
 
@@ -24,7 +24,9 @@ const Blog = ({blog, handleUpdate, handleDelete}) => {
                 <p>{blog.url}</p>
                 <p>likes {likes} <button className='blog-button' onClick={likeBlog}>like</button></p>
                 <p>{blog.user.name}</p>
-                <button className='blog-delete-button' onClick={() => handleDelete(blog)}>delete</button>
+                {user.id == blog.user.id &&
+                    <button className='blog-delete-button' onClick={() => handleDelete(blog)}>delete</button>
+                }
             </div>
         </div>  
     );

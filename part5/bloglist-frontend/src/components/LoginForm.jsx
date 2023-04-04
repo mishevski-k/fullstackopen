@@ -2,16 +2,16 @@ import React from 'react';
 
 const LoginFrom = ({username, setUsername, password, setPassword, handleSubmit}) => {
     return(
-        <form onSubmit={handleSubmit}>
+        <form id="user-form" onSubmit={handleSubmit}>
             <div>
                 username
-                <input type='text' value={username} onChange={({target}) => setUsername(target.value)} ></input>
+                <input type='text' id="user-username" value={username} onChange={({target}) => setUsername(target.value)} ></input>
             </div>
             <div>
                 password
-                <input type='password' value={password} onChange={({target}) => setPassword(target.value)}></input>
+                <input type='password' id='user-password' value={password} onChange={({target}) => setPassword(target.value)}></input>
             </div>
-            <button type='submit'>login</button>
+            <button id="user-login" type='submit'>login</button>
         </form>
     );
 };

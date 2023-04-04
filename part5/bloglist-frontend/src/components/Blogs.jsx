@@ -1,7 +1,7 @@
 import React from 'react';
 import Blog from './Blog';
 
-const Blogs = ({ blogs, handleUpdate, handleDelete }) => {
+const Blogs = ({ blogs, handleUpdate, handleDelete, user }) => {
 
     if(blogs.length === 0){
         return (
@@ -12,7 +12,7 @@ const Blogs = ({ blogs, handleUpdate, handleDelete }) => {
     return(
         <div className='blog-items'>
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} handleDelete={handleDelete} />
+                <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate} handleDelete={handleDelete} user={user} />
             )}
         </div>
     );
