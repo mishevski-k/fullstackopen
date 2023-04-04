@@ -61,7 +61,15 @@ describe('Blog app', function(){
         cy.get('.blog-item').eq(0).contains('show').click();
         cy.get('.blog-item').eq(0).get('.like-blog').click();
         cy.get('.blog-item').eq(0).get('.blog-likes').contains(1)
-      })
+      });
+
+      describe('User is creator of blog', function(){
+        it('can delete blog', function(){
+          cy.get('.blog-item').eq(0).contains('show').click();
+          cy.get('.blog-item').eq(0).get('.blog-delete-button').click();
+          cy.contains('Testing title Admin').should('not.exist');
+        });
+      });
   
     });
   });
