@@ -133,7 +133,7 @@ const App = () => {
                 <Toggle default={false} showLabel='new blog' hideLabel='cancel' ref={BlogFormRef}>
                     <BlogForm createBlog={addBlog}/>
                 </Toggle>
-                <Blogs blogs={blogs} handleUpdate={updateBlog} handleDelete={deleteBlog} />
+                <Blogs blogs={blogs} handleUpdate={updateBlog} handleDelete={deleteBlog} user={user} />
             </div>}
 
         </div>
