@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development SECRET=sudo nodemon index.js",
     "test": "cross-env NODE_ENV=test SECRET=sudo jest --verbose --runInBand",
     "build:ui": "rm -rf dist && cd ../notes-frontend && npm run build && cp -r dist ../notes-backend && cd ../notes-backend",
-    "deploy:full": "npm run build:ui && git add . && git commit -m notesapp-ui-build && git push"
+    "deploy:full": "npm run build:ui && git add . && git commit -m notesapp-ui-build && git push",
+    "start:test": "cross-env NODE_ENV=test SECRET=sudo node index.js"
   },
   "author": "",
   "license": "ISC",
