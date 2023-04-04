@@ -6,7 +6,13 @@ describe('Blog app', function(){
       password: 'sudo',
       name: 'Admin',
     };
+    const newUser = {
+      username: 'kiril-m',
+      name: 'Kiril',
+      password: 'sudo',
+    };
     cy.request('POST', 'http://localhost:3003/api/v1/users', user);
+    cy.request('POST', 'http://localhost:3003/api/v1/users', newUser);
     cy.visit('http://localhost:5173');
   });
 
@@ -72,7 +78,8 @@ describe('Blog app', function(){
       });
   
     });
-  });
 
+
+  });
 
 });
